@@ -122,18 +122,17 @@ const PROPERTIES = [
 ];
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCHl6mxl6hrkzHfP5Q7IwwDBM-XMzCEsf8",
-  authDomain: "apartcloud-41240.firebaseapp.com",
-  projectId: "apartcloud-41240",
-  storageBucket: "apartcloud-41240.firebasestorage.app",
-  messagingSenderId: "11364836801",
-  appId: "1:11364836801:web:494637b3ca50422dd8bb40",
-  measurementId: "G-B4FQD8000F"
+  apiKey: "AIzaSyD8G-1a-3DoCx1hjBHCXUDUhv29WQLMUyo",
+  authDomain: "my-apartment-3497e.firebaseapp.com",
+  projectId: "my-apartment-3497e",
+  storageBucket: "my-apartment-3497e.firebasestorage.app",
+  messagingSenderId: "564858257636",
+  appId: "1:564858257636:web:356988adad40170ce72cf1",
+  measurementId: "G-HR4107CKM2"
 };
 const app = initializeApp(firebaseConfig);
-export const db = getFirestore(app);
-export const auth = getAuth(app);
-const appId = typeof __app_id !== 'undefined' ? __app_id : 'apartcloud-pro-v1';
+const db = getFirestore(app); export
+const auth = getAuth(app); export
 
 export default function App() {
   const [user, setUser] = useState(null);
