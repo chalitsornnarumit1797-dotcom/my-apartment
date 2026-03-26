@@ -1,7 +1,7 @@
 import React, { ... } from 'react';
 import { initializeApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore'; 
+import { getFirestore } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth'; 
   getFirestore, 
   collection, 
   doc, 
@@ -131,8 +131,8 @@ const firebaseConfig = {
   measurementId: "G-B4FQD8000F"
 };
 const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
+export const db = getFirestore(app);
+export const auth = getAuth(app);
 const appId = typeof __app_id !== 'undefined' ? __app_id : 'apartcloud-pro-v1';
 
 export default function App() {
