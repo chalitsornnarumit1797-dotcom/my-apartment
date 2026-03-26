@@ -131,8 +131,8 @@ const firebaseConfig = {
   measurementId: "G-HR4107CKM2"
 };
 const app = initializeApp(firebaseConfig);
-const db = getFirestore(app); export
-const auth = getAuth(app); export
+export const db = getFirestore(app);
+export const auth = getAuth(app);
 
 export default function App() {
   const [user, setUser] = useState(null);
