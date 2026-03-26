@@ -511,4 +511,3 @@ export default function App() {
 }
 
 function Loader2({ className }) { return <div className={`w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin ${className}`}></div>; }
-export default App;
