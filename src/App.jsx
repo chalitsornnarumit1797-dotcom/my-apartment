@@ -1,6 +1,7 @@
 import React, { ... } from 'react';
 import { initializeApp } from 'firebase/app';
-import { 
+import { getAuth } from 'firebase/auth';
+import { getFirestore } from 'firebase/firestore'; 
   getFirestore, 
   collection, 
   doc, 
@@ -120,7 +121,15 @@ const PROPERTIES = [
   }
 ];
 
-const firebaseConfig = JSON.parse(__firebase_config);
+const firebaseConfig = {
+  apiKey: "AIzaSyCHl6mxl6hrkzHfP5Q7IwwDBM-XMzCEsf8",
+  authDomain: "apartcloud-41240.firebaseapp.com",
+  projectId: "apartcloud-41240",
+  storageBucket: "apartcloud-41240.firebasestorage.app",
+  messagingSenderId: "11364836801",
+  appId: "1:11364836801:web:494637b3ca50422dd8bb40",
+  measurementId: "G-B4FQD8000F"
+};
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
