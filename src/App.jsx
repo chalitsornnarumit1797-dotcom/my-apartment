@@ -24,7 +24,7 @@ import {
 
 // --- Configuration & Constants ---
 const ACCESS_PIN = "933979"; 
-const appId = "my-apartment-app"; // กำหนด ID สำหรับเรียกใช้ใน Firestore
+const appId = "my-apartment-app"; 
 
 const STATUS_CONFIG = {
   available: { label: 'พร้อมขาย (Available)', color: 'bg-emerald-500', text: 'text-white', light: 'bg-emerald-50', border: 'border-emerald-200', iconColor: 'text-emerald-600' },
@@ -53,8 +53,8 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-export const db = getFirestore(app);
-export const auth = getAuth(app);
+const db = getFirestore(app);
+const auth = getAuth(app);
 
 export default function App() {
   const [user, setUser] = useState(null);
@@ -77,11 +77,7 @@ export default function App() {
 
   useEffect(() => {
     const initAuth = async () => {
-      try {
-        await signInAnonymously(auth);
-      } catch (err) {
-        console.error("Auth error:", err);
-      }
+      try { await signInAnonymously(auth); } catch (err) { console.error(err); }
     };
     initAuth();
     const unsubscribe = onAuthStateChanged(auth, setUser);
@@ -150,11 +146,7 @@ export default function App() {
         });
       }
       setSelectedRoom(null);
-    } catch (err) {
-      console.error("Save error:", err);
-    } finally {
-      setIsSaving(false);
-    }
+    } catch (err) { console.error(err); } finally { setIsSaving(false); }
   };
 
   const handlePinSubmit = (e) => {
@@ -172,26 +164,6 @@ export default function App() {
   const handleLock = () => {
     setIsUnlocked(false);
     localStorage.removeItem('apt_unlocked');
-  };
-
-  const exportCSVSummary = () => {
-    let csvRows = [["สรุปรายงานหอพักทั้งหมด", `วันที่: ${new Date().toLocaleString('th-TH')}`], []];
-    csvRows.push(["สถานะ", "จำนวนห้อง"]);
-    Object.keys(STATUS_CONFIG).forEach(key => {
-        csvRows.push([STATUS_CONFIG[key].label, statusSummary[key].length]);
-    });
-    csvRows.push([]);
-    csvRows.push(["รายละเอียดรายการจอง"]);
-    csvRows.push(["อาคาร", "เลขห้อง", "ชื่อลูกค้า", "เบอร์โทร", "วันที่นัด", "เวลานัด"]);
-    statusSummary.booked.forEach(item => {
-        csvRows.push([item.propertyName, item.roomNo, item.lastVisitor, item.lastPhone, item.date, item.time]);
-    });
-    const csvContent = "\uFEFF" + csvRows.map(e => e.map(v => `"${v}"`).join(",")).join("\n");
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = `ApartCloud_Summary_${new Date().toLocaleDateString('th-TH').replace(/\//g, '-')}.csv`;
-    link.click();
   };
 
   if (!isUnlocked) {
@@ -223,8 +195,6 @@ export default function App() {
     );
   }
 
-  if (loading && !user) return <div className="min-h-screen flex items-center justify-center font-bold">กำลังโหลดข้อมูลคลาวด์...</div>;
-
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 font-['Prompt',sans-serif]">
       <nav className="bg-white border-b sticky top-0 z-40 shadow-sm px-4 h-16 flex justify-between items-center no-print">
@@ -232,10 +202,9 @@ export default function App() {
           <Building2 className="w-5 h-5" /> ApartCloud PRO
         </div>
         <div className="flex gap-2 font-bold text-xs">
-          <button onClick={() => setView('dashboard')} className={`p-2 px-3 rounded-xl flex items-center gap-2 ${view === 'dashboard' ? 'bg-indigo-600 text-white shadow-lg' : 'text-slate-400'}`}><LayoutDashboard className="w-4 h-4" /> แดชบอร์ด</button>
-          <button onClick={() => setView('visitors')} className={`p-2 px-3 rounded-xl flex items-center gap-2 ${view === 'visitors' ? 'bg-indigo-600 text-white shadow-lg' : 'text-slate-400'}`}><Users className="w-4 h-4" /> ประวัติ</button>
-          <button onClick={() => setView('summary')} className={`p-2 px-3 rounded-xl flex items-center gap-2 ${view === 'summary' ? 'bg-indigo-600 text-white shadow-lg' : 'text-slate-400'}`}><FileText className="w-4 h-4" /> สรุป</button>
-          <button onClick={handleLock} className="p-2 px-3 rounded-xl text-slate-300 hover:text-rose-500 transition-colors"><Unlock className="w-4 h-4" /></button>
+          <button onClick={() => setView('dashboard')} className={`p-2 px-3 rounded-xl flex items-center gap-2 ${view === 'dashboard' ? 'bg-indigo-600 text-white' : 'text-slate-400'}`}><LayoutDashboard className="w-4 h-4" /> แดชบอร์ด</button>
+          <button onClick={() => setView('visitors')} className={`p-2 px-3 rounded-xl flex items-center gap-2 ${view === 'visitors' ? 'bg-indigo-600 text-white' : 'text-slate-400'}`}><Users className="w-4 h-4" /> ประวัติ</button>
+          <button onClick={handleLock} className="p-2 px-3 rounded-xl text-slate-300 hover:text-rose-500"><Unlock className="w-4 h-4" /></button>
         </div>
       </nav>
 
@@ -244,7 +213,7 @@ export default function App() {
           <>
             <div className="mb-6 grid grid-cols-2 md:grid-cols-4 gap-3">
               {['available', 'booked', 'maintenance', 'appointment'].map(st => (
-                <div key={st} className="bg-white p-4 rounded-2xl border-b-4 shadow-sm text-center" style={{borderColor: STATUS_CONFIG[st].color.replace('bg-', '#')}}>
+                <div key={st} className="bg-white p-4 rounded-2xl border-b-4 shadow-sm text-center" style={{borderColor: STATUS_CONFIG[st].iconColor}}>
                   <p className="text-[10px] text-slate-400 font-bold mb-1 uppercase tracking-tighter">{STATUS_CONFIG[st].label.split(' ')[0]}</p>
                   <p className="text-2xl font-black">{statusSummary[st]?.length || 0}</p>
                 </div>
@@ -275,14 +244,11 @@ export default function App() {
               ))}
             </div>
           </>
-        ) : view === 'visitors' ? (
+        ) : (
           <div className="bg-white rounded-[2rem] shadow-xl overflow-hidden border border-slate-100">
-            <div className="p-8 bg-slate-900 text-white flex justify-between items-center font-black italic uppercase">ACTIVITY HISTORY</div>
+            <div className="p-8 bg-slate-900 text-white font-black italic uppercase">ACTIVITY HISTORY</div>
             <div className="overflow-x-auto">
               <table className="w-full text-left text-sm">
-                <thead className="bg-slate-50 text-[10px] uppercase font-black text-slate-400 border-b">
-                  <tr><th className="p-6">วันที่</th><th className="p-6">เลขห้อง</th><th className="p-6">ลูกค้า</th><th className="p-6">เบอร์โทร</th><th className="p-6">สถานะ</th><th className="p-6 text-right">จัดการ</th></tr>
-                </thead>
                 <tbody className="divide-y divide-slate-100 font-bold">
                   {visitorLogs.map(log => (
                     <tr key={log.id}>
@@ -291,24 +257,10 @@ export default function App() {
                       <td className="p-6">{log.name}</td>
                       <td className="p-6 text-indigo-500 font-black">{log.phone}</td>
                       <td className="p-6 uppercase text-[10px]">{log.statusLabel}</td>
-                      <td className="p-6 text-right"><button onClick={() => deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'logs', log.id))} className="p-2 text-rose-500 bg-rose-50 rounded-lg hover:bg-rose-500 hover:text-white transition-all"><X className="w-4 h-4" /></button></td>
                     </tr>
                   ))}
                 </tbody>
               </table>
-            </div>
-          </div>
-        ) : (
-          <div className="space-y-6">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-              <div>
-                <h2 className="text-3xl font-black italic uppercase tracking-tighter text-slate-800">SUMMARY REPORT</h2>
-                <p className="text-slate-400 text-xs font-bold uppercase tracking-widest">สรุปภาพรวมหอพักทั้งหมด</p>
-              </div>
-              <div className="flex gap-2 w-full sm:w-auto">
-                <button onClick={exportCSVSummary} className="flex-1 sm:flex-none bg-emerald-600 text-white p-3 rounded-2xl font-black flex items-center justify-center gap-2 text-xs shadow-lg shadow-emerald-100"><Download className="w-4 h-4" /> Export CSV</button>
-                <button onClick={() => window.print()} className="flex-1 sm:flex-none bg-slate-900 text-white p-3 rounded-2xl font-black flex items-center justify-center gap-2 text-xs shadow-lg"><Printer className="w-4 h-4" /> Print PDF</button>
-              </div>
             </div>
           </div>
         )}
@@ -331,9 +283,9 @@ export default function App() {
                 ))}
               </div>
               <div className="bg-slate-50 p-6 rounded-3xl space-y-4">
-                <input name="customPrice" placeholder="ราคาพิเศษ..." className="w-full p-4 rounded-xl shadow-sm font-black" />
-                <input name="visitorName" placeholder="ชื่อลูกค้า" className="w-full p-4 rounded-xl shadow-sm font-bold" />
-                <input name="visitorPhone" placeholder="เบอร์โทรศัพท์" className="w-full p-4 rounded-xl shadow-sm font-bold" />
+                <input name="customPrice" placeholder="ราคาพิเศษ..." className="w-full p-4 rounded-xl shadow-sm font-black outline-none" />
+                <input name="visitorName" placeholder="ชื่อลูกค้า" className="w-full p-4 rounded-xl shadow-sm font-bold outline-none" />
+                <input name="visitorPhone" placeholder="เบอร์โทรศัพท์" className="w-full p-4 rounded-xl shadow-sm font-bold outline-none" />
               </div>
               <button type="submit" disabled={isSaving} className="w-full bg-indigo-600 text-white py-5 rounded-2xl font-black text-xl flex items-center justify-center gap-3">
                 {isSaving ? "SAVING..." : <><Save className="w-6 h-6" /> SAVE TO CLOUD</>}
@@ -342,7 +294,7 @@ export default function App() {
           </form>
         </div>
       )}
-      <style dangerouslySetInnerHTML={{ __html: `.no-scrollbar::-webkit-scrollbar { display: none; } @media print { .no-print { display: none !important; } }`}} />
+      <style dangerouslySetInnerHTML={{ __html: `.no-scrollbar::-webkit-scrollbar { display: none; }`}} />
     </div>
   );
 }
